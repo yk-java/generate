@@ -1,0 +1,10 @@
+# 主配置文件主要用来存放公共设置，不受环境配置影响
+server:
+  port: 8082 # 指定端口号
+  servlet:
+    context-path: /generate
+# 开发配置
+spring:
+  profiles:
+    #active: @profile.active@
+    active: dev
