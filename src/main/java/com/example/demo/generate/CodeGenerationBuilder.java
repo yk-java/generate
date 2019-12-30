@@ -37,8 +37,10 @@ public class CodeGenerationBuilder extends AbstractCodeGenerateFactory {
      * @throws SQLException sql异常
      */
     private List<ColumnData> getColumnData(String tableName) throws SQLException {
-        //String sqlColumns = "select column_name ,data_type,column_comment,0,0,character_maximum_length,is_nullable nullable from information_schema.columns where table_name = ? and table_schema = ?";
-        String sqlColumns = "SELECT col.column_name,col.data_type,des.description AS column_comment,col.numeric_precision,col.numeric_scale," +
+        //mysql
+        String sqlColumns = "select column_name ,data_type,column_comment,0,0,character_maximum_length,is_nullable nullable from information_schema.columns where table_name = ? and table_schema = ?";
+        //pgsql
+        /*String sqlColumns = "SELECT col.column_name,col.data_type,des.description AS column_comment,col.numeric_precision,col.numeric_scale," +
                 "col.character_maximum_length," +
                 "col.is_nullable AS nullable" +
                 " FROM " +
@@ -46,13 +48,14 @@ public class CodeGenerationBuilder extends AbstractCodeGenerateFactory {
                 " LEFT JOIN pg_description des ON col.table_name :: regclass = des.objoid" +
                 " AND col.ordinal_position = des.objsubid" +
                 " WHERE " +
-                "table_name = ?";
+                "table_name = ?";*/
 
         List<ColumnData> columnList = Lists.newArrayList();
         ResultSet rs = null;
         try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sqlColumns)) {
 
             ps.setString(1, tableName);
+            ps.setString(2, "order");
             rs = ps.executeQuery();
             while (rs.next()) {
                 String name = rs.getString(1).toLowerCase();
