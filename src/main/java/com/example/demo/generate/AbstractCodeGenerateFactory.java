@@ -34,7 +34,7 @@ public abstract class AbstractCodeGenerateFactory {
     AbstractCodeGenerateFactory(GeneratorParam generatorParam, GeneratorConfig generatorConfig) {
         this.generatorParam = generatorParam;
         this.generatorConfig = generatorConfig;
-        setPath(generatorConfig.getProjectPath());
+        setPath(generatorParam.getProjectPath());
     }
 
     Connection getConnection() throws SQLException {

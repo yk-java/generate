@@ -31,6 +31,13 @@ public class GeneratorParam {
      */
     private String mapper;
 
+    /**
+     * 项目路径
+     */
+    private String projectPath;
+
+
+
     public String getTableName() {
         return tableName;
     }
@@ -77,5 +84,13 @@ public class GeneratorParam {
 
     public void setMapper(String mapper) {
         this.mapper = mapper;
+    }
+
+    public String getProjectPath() {
+        return projectPath;
+    }
+
+    public void setProjectPath(String projectPath) {
+        this.projectPath = projectPath;
     }
 }
