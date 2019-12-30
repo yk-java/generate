@@ -10,6 +10,7 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>generate</artifactId>
+    <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <name>generate</name>
     <description>Generate project for Spring Boot</description>
@@ -133,6 +134,7 @@
     </profiles>
 
     <build>
+        <finalName>generate</finalName>
         <!-- 添加资源 -->
         <resources>
             <resource>
