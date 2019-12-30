@@ -11,7 +11,7 @@
 ### base 函数
 killTomcat()
 {
-    pid=`ps -ef|grep tomcat|grep java|awk '{print $2}'`
+    pid=`ps -ef|grep -w apache-tomcat-8082|grep java|awk '{print $2}'`
     echo "tomcat Id list :$pid"
     if [ "$pid" = "" ]
     then
@@ -20,7 +20,7 @@ killTomcat()
       kill -9 $pid
     fi
 }
-cd $PROJ_PATH/generate
+cd $PROJ_PATH
 mvn clean install
 
 # 停tomcat

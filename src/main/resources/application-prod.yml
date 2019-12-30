@@ -1,7 +1,45 @@
-# 生产配置
+# 开发配置
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:mysql://127.0.0.1:3306/dc_async_service?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://180.76.143.4:3306/order?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false
     username: root
-    password: root
+    password: Yang@731777907
+    druid:
+      initialSize: 1 #初始化时建立物理连接的个数。初始化发生在显示调用init方法，或者第一次getConnection时
+      minIdle: 1  #最小连接池数量
+      maxActive: 20 #最大连接池数量
+      maxWait: 60000 #获取连接时最大等待时间，单位毫秒。配置了maxWait之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置useUnfairLock属性为true使用非公平锁。
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1
+      testWhileIdle: true
+      testOnBorrow: true
+      testOnReturn: false
+      poolPreparedStatements: true  #是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql5.5以下的版本中没有PSCache功能，建议关闭掉。5.5及以上版本有PSCache，建议开启。
+      maxPoolPreparedStatementPerConnectionSize: 20
+      filters: stat,log4j,wall  #属性类型是字符串，通过别名的方式配置扩展插件，常用的插件有：监控统计用的filter:stat，日志用的filter:log4j， 防御sql注入的filter:wall
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.example.demo.*
+pagehelper:
+  helper-dialect: postgresql
+  reasonable: true
+  support-methods-arguments: true
+  params: count==countSql
+
+generator:
+  url: ${spring.datasource.url}
+  username: ${spring.datasource.username}
+  password: ${spring.datasource.password}
+  databaseName: cloud
+  #default code path
+  sourcePackage: src.main.java
+  webPackage: src.main.webapp
+  #bussi_package[User defined]
+  businessPackage: com.example.demo
+  #ftl resource URL
+  templatePath: src/main/resources/templates
+  projectPath: D:/Idea workspace/demo/

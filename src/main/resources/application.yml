@@ -7,4 +7,4 @@ server:
 spring:
   profiles:
     #active: @profile.active@
-    active: dev
+    active: prod
