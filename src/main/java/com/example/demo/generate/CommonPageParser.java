@@ -25,34 +25,31 @@ public class CommonPageParser {
 
     private static boolean isReplace = false;
 
-    static {
-        try {
-            String templateBasePath = AbstractCodeGenerateFactory.getProjectPath()
-                    + "src/main/resources/templates";
-            Properties properties = new Properties();
-            properties.setProperty("resource.loader", "file");
-            properties.setProperty("file.resource.loader.description",
-                    "Velocity File Resource Loader");
-            properties.setProperty("file.resource.loader.path",
-                    templateBasePath);
-            properties.setProperty("file.resource.loader.cache", "true");
-            properties.setProperty(
-                    "file.resource.loader.modificationCheckInterval", "30");
-            properties.setProperty("runtime.log.logsystem.class",
-                    "org.apache.velocity.runtime.log.Log4JLogChute");
-            properties.setProperty("runtime.log.logsystem.log4j.logger",
-                    "org.apache.velocity");
-            properties.setProperty("directive.set.null.allowed", "true");
-            VelocityEngine velocityEngine = new VelocityEngine();
-            velocityEngine.init(properties);
-            ve = velocityEngine;
-        } catch (Exception e) {
-            log.error(e);
-        }
+    private static void getVelocityEngine(){
+        String templateBasePath = AbstractCodeGenerateFactory.getProjectPath()
+                + "src/main/resources/templates";
+        Properties properties = new Properties();
+        properties.setProperty("resource.loader", "file");
+        properties.setProperty("file.resource.loader.description",
+                "Velocity File Resource Loader");
+        properties.setProperty("file.resource.loader.path",
+                templateBasePath);
+        properties.setProperty("file.resource.loader.cache", "true");
+        properties.setProperty(
+                "file.resource.loader.modificationCheckInterval", "30");
+        properties.setProperty("runtime.log.logsystem.class",
+                "org.apache.velocity.runtime.log.Log4JLogChute");
+        properties.setProperty("runtime.log.logsystem.log4j.logger",
+                "org.apache.velocity");
+        properties.setProperty("directive.set.null.allowed", "true");
+        VelocityEngine velocityEngine = new VelocityEngine();
+        velocityEngine.init(properties);
+        ve = velocityEngine;
     }
 
     public static void writerPage(VelocityContext context, String templateName,
                                   String fileDirPath, String targetFile) {
+        getVelocityEngine();
         File file = new File(fileDirPath + targetFile);
         if (!(file.exists())) {
             isReplace = new File(file.getParent()).mkdirs();
