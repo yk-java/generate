@@ -38,9 +38,9 @@ public class CodeGenerationBuilder extends AbstractCodeGenerateFactory {
      */
     private List<ColumnData> getColumnData(String tableName) throws SQLException {
         //mysql
-        String sqlColumns = "select column_name ,data_type,column_comment,0,0,character_maximum_length,is_nullable nullable from information_schema.columns where table_name = ? and table_schema = ?";
+        //String sqlColumns = "select column_name ,data_type,column_comment,0,0,character_maximum_length,is_nullable nullable from information_schema.columns where table_name = ? and table_schema = ?";
         //pgsql
-        /*String sqlColumns = "SELECT col.column_name,col.data_type,des.description AS column_comment,col.numeric_precision,col.numeric_scale," +
+        String sqlColumns = "SELECT col.column_name,col.data_type,des.description AS column_comment,col.numeric_precision,col.numeric_scale," +
                 "col.character_maximum_length," +
                 "col.is_nullable AS nullable" +
                 " FROM " +
@@ -48,14 +48,13 @@ public class CodeGenerationBuilder extends AbstractCodeGenerateFactory {
                 " LEFT JOIN pg_description des ON col.table_name :: regclass = des.objoid" +
                 " AND col.ordinal_position = des.objsubid" +
                 " WHERE " +
-                "table_name = ?";*/
+                "table_name = ?";
 
         List<ColumnData> columnList = Lists.newArrayList();
         ResultSet rs = null;
         try (Connection con = getConnection(); PreparedStatement ps = con.prepareStatement(sqlColumns)) {
 
             ps.setString(1, tableName);
-            ps.setString(2, "order");
             rs = ps.executeQuery();
             while (rs.next()) {
                 String name = rs.getString(1).toLowerCase();
@@ -166,6 +165,7 @@ public class CodeGenerationBuilder extends AbstractCodeGenerateFactory {
             }
         });
         String insert = getInsertSql(tableName, columnData);
+        String batchInsert = getBatchInsertSql(tableName, columnData);
         String insertSelective = getInsertSelectiveSql(tableName, columnData);
         String update = getUpdateSql(tableName, columnData);
         String updateSelective = getUpdateSelectiveSql(tableName, columnData);
@@ -174,6 +174,7 @@ public class CodeGenerationBuilder extends AbstractCodeGenerateFactory {
         sqlMap.put("columnFields", columnFields);
         sqlMap.put("resultMap", resultMap);
         sqlMap.put("insert", insert.replace(":createTime", NOW).replace(":updateTime", NOW));
+        sqlMap.put("batchInsert", batchInsert.replace(":createTime", NOW).replace(":updateTime", NOW));
         sqlMap.put("insertSelective", insertSelective.replace(":createTime", NOW).replace(":updateTime", NOW));
         sqlMap.put("update", update.replace(":createTime", NOW).replace(":updateTime", NOW));
         sqlMap.put("updateSelective", updateSelective.replace(":createTime", NOW).replace(":updateTime", NOW));
@@ -193,8 +194,8 @@ public class CodeGenerationBuilder extends AbstractCodeGenerateFactory {
         StringBuilder sbColumnName = new StringBuilder();
         StringBuilder sbColumnValue = new StringBuilder();
 
-        sbColumnName.append("create_time, ");
         sbColumnValue.append(":createTime, ");
+        sbColumnName.append("create_time, ");
         String columnFields = columnData.stream().filter(f -> !"create_time".equals(f.getColumnName()))
                 .map(ColumnData::getColumnName)
                 .collect(Collectors.joining(", "));
@@ -207,6 +208,38 @@ public class CodeGenerationBuilder extends AbstractCodeGenerateFactory {
         sbColumnValue.append(columnValues);
         return "INSERT INTO " + tableName + "(" + sbColumnName.toString() + ")"
                 + " values (" + sbColumnValue.toString() + ")";
+
+    }
+
+    /**
+     * 生成插入语句
+     *
+     * @param tableName  表名
+     * @param columnData 表数据
+     * @return String
+     */
+    private String getBatchInsertSql(String tableName, List<ColumnData> columnData) {
+        StringBuilder sbColumnName = new StringBuilder();
+        StringBuilder sbColumnValue = new StringBuilder();
+
+        sbColumnName.append("create_time, ");
+        sbColumnValue.append(":createTime, ");
+        String columnFields = columnData.stream().filter(f -> !"create_time".equals(f.getColumnName()))
+                .map(ColumnData::getColumnName)
+                .collect(Collectors.joining(", "));
+        sbColumnName.append(columnFields);
+        String columnValues = columnData.stream().filter(f -> !"create_time".equals(f.getColumnName()))
+                .map(x -> {
+                    String columnValue = getColumnValue(x.getColumnName());
+                    return "#{field." + columnValue + "," + "jdbcType=" + x.getJdbcType() + "}";
+                }).collect(Collectors.joining(", "));
+        sbColumnValue.append(columnValues);
+        return "INSERT INTO " + tableName + "(" + sbColumnName.toString() + ")\r"
+                + " VALUES\r"
+                +"<foreach collection=\"list\" index=\"index\" item=\"field\" separator=\",\">\r" +
+                "     (" + sbColumnValue.toString() + ")\r" +
+                " </foreach>";
+
     }
 
     /**

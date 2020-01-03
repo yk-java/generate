@@ -19,6 +19,9 @@
 	<insert id="insertSelective" parameterType="${bussPackage}.vo.${className}VO">
 		${SQL.insertSelective}
 	</insert>
+	<insert id="batchInsert" parameterType="java.util.List" >
+		${SQL.batchInsert}
+	</insert>
 	<update id="updateByPrimaryKey" parameterType="${bussPackage}.vo.${className}VO">
     	${SQL.update}
   	</update>
@@ -29,6 +32,21 @@
 		delete from ${tableName}
 		where id = #{id,jdbcType=VARCHAR}
 	</delete>
+	<update id="deleteByIds" parameterType="com.cc.framework.pojo.DeleteCondition">
+		update ${tableName} set status='0',modify_time = now()
+		where
+		<choose>
+			<when test="ids != null">
+				id IN
+				<foreach collection="ids" item="item" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</when>
+			<otherwise>
+				1=2
+			</otherwise>
+		</choose>
+	</update>
 	<sql id="Where">
 		<where>
 			<if test="id != null and id != ''">

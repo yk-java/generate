@@ -19,6 +19,8 @@ public interface ${className}Mapper {
 
    int insertSelective(${className}VO record);
 
+   void batchInsert(List<${className}VO> list);
+
    ${className}PO selectByPrimaryKey(String id);
 
    int updateByPrimaryKeySelective(${className}VO record);
