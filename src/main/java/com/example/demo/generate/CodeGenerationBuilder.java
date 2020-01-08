@@ -112,10 +112,11 @@ public class CodeGenerationBuilder extends AbstractCodeGenerateFactory {
             String maxChar = name.substring(0, 1).toUpperCase();
 
             if (flag) {
-                str.append("@ApiModelProperty(value = \"").append(comment).append("\")");
+                str.append("@ApiModelProperty(value = \"").append(comment).append("\")\r");
             } else {
-                str.append("/** ").append(comment).append("*/");
+                str.append("/** ").append(comment).append("*/\r");
             }
+            str.append("@ExcelProperty(\"").append(comment).append("\")");
             String rt = "\r";
             str.append(rt).append("private ").append(type).append(" ").append(name).append(";").append(rt);
 

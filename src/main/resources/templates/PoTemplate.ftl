@@ -1,4 +1,5 @@
-package com.example.demo.pojo;
+package ${bussPackage}.pojo;
+import com.alibaba.excel.annotation.ExcelProperty;
 
 /**
  * 

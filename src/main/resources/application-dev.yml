@@ -39,7 +39,7 @@ generator:
   sourcePackage: src.main.java
   webPackage: src.main.webapp
   #bussi_package[User defined]
-  businessPackage: com.example.demo
+  businessPackage: com.cc.app.system.user
   #ftl resource URL
   templatePath: src/main/resources/templates
-  projectPath: D:/Idea workspace/demo/
+  projectPath: D:/githubRepositories/generate/

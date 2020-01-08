@@ -34,7 +34,7 @@ public abstract class AbstractCodeGenerateFactory {
     AbstractCodeGenerateFactory(GeneratorParam generatorParam, GeneratorConfig generatorConfig) {
         this.generatorParam = generatorParam;
         this.generatorConfig = generatorConfig;
-        setPath(generatorParam.getProjectPath());
+        setPath(generatorConfig.getProjectPath());
     }
 
     Connection getConnection() throws SQLException {
@@ -69,9 +69,7 @@ public abstract class AbstractCodeGenerateFactory {
     public void codeGenerate() {
 
         String lowerName = generatorParam.getClassName().substring(0, 1).toLowerCase() + generatorParam.getClassName().substring(1);
-        String downTableName = underlineToCamel(generatorParam.getTableName());
-        String upTableName = downTableName.substring(0, 1).toUpperCase() + generatorParam.getClassName().substring(1);
-        String srcPath = path + generatorConfig.getSourcePackage().replace(".", "/") + PATH_FLAG;
+        String srcPath = generatorParam.getProjectPath() + generatorConfig.getSourcePackage().replace(".", "/") + PATH_FLAG;
         String pckPath = srcPath + generatorConfig.getBusinessPackage().replace(".", "/") + PATH_FLAG;
 
         String beanPath = "vo/" + generatorParam.getClassName() + "VO.java";
@@ -86,8 +84,6 @@ public abstract class AbstractCodeGenerateFactory {
         context.put("lowerName", lowerName);
         context.put("codeName", generatorParam.getCodeName());
         context.put("tableName", generatorParam.getTableName());
-        context.put("downTableName", downTableName);
-        context.put("upTableName", upTableName);
         context.put("bussPackage", generatorConfig.getBusinessPackage());
         //context.put("entityPackage", generatorParam.getEntityPackage().replace(".", "/"));
         context.put("developer", generatorParam.getDeveloper());
@@ -108,7 +104,7 @@ public abstract class AbstractCodeGenerateFactory {
         CommonPageParser.writerPage(context, "ServiceTemplate.ftl", pckPath, servicePath);
         CommonPageParser.writerPage(context, "ActionTemplate.ftl", pckPath, controllerPath);
         CommonPageParser.writerPage(context, "DaoTemplate.ftl", pckPath, mapper);
-        CommonPageParser.writerPage(context, "MapperTemplate.xml",  path + "src/main/resources/", mapperPath);
+        CommonPageParser.writerPage(context, "MapperTemplate.xml",  generatorParam.getProjectPath() + "src/main/resources/", mapperPath);
 
         log.info("----------------------------代码生成完毕---------------------------");
     }

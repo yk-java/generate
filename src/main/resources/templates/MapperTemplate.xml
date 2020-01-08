@@ -11,7 +11,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from ${tableName}
-		where id = #{id,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=VARCHAR} AND status = '1'
 	</select>
 	<insert id="insert" parameterType="${bussPackage}.vo.${className}VO">
 		${SQL.insert}
@@ -49,8 +49,9 @@
 	</update>
 	<sql id="Where">
 		<where>
+			status = '1'
 			<if test="id != null and id != ''">
-				(id = #{id})
+				AND id = #{id}
 			</if>
 		</where>
 	</sql>
@@ -60,8 +61,10 @@
 		FROM
 		${tableName}
 		<include refid="Where"/>
-		ORDER BY orders
-		LIMIT #{limit} OFFSET #{offset}
+		ORDER BY create_time
+		<if test="rows != null and rows gt 0">
+			LIMIT #{rows} OFFSET #{offset}
+		</if>
 	</select>
 	<select id="getRowNumber" resultType="java.lang.Long" parameterType="${bussPackage}.vo.${className}VO" >
 		SELECT
@@ -75,6 +78,6 @@
 		<include refid="Base_Column_List" />
 		from ${tableName}
 		where id = #{id,jdbcType=VARCHAR}
-		ORDER BY orders
+		ORDER BY create_time
 	</select>
 </mapper>

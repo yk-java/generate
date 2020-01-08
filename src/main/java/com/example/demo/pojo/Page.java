@@ -6,6 +6,7 @@ package com.example.demo.pojo;
  */
 public class Page {
     int page = 1;
+    int rows = 20;
     int limit = 20;
     int offset = 0;
 
@@ -15,6 +16,14 @@ public class Page {
 
     public void setPage(int page) {
         this.page = page;
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
     }
 
     public int getLimit() {

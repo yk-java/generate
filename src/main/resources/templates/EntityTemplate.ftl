@@ -1,7 +1,8 @@
-package com.example.demo.vo;
+package ${bussPackage}.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.example.demo.pojo.Page;
 import com.example.demo.pojo.ResponseMessage;
 /**
@@ -17,10 +18,10 @@ public class ${className}VO extends Page{
 
    public ResponseMessage validate() {
    ResponseMessage rm = ResponseMessage.getInstance();
-     if (true) {
+     if (false) {
        return rm.addError("不能为空！");
      }
-     if (true) {
+     if (false) {
        return rm.addError("不能为空！");
      }
 

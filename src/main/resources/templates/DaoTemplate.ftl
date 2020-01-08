@@ -1,7 +1,8 @@
-package com.example.demo.mapper;
+package ${bussPackage}.mapper;
 
 import ${bussPackage}.pojo.${className}PO;
 import ${bussPackage}.vo.${className}VO;
+import com.cc.framework.pojo.DeleteCondition;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ import java.util.List;
 public interface ${className}Mapper {
 
    int deleteByPrimaryKey(String id);
+
+   int deleteByIds(DeleteCondition dc);
 
    int insert(${className}VO record);
 

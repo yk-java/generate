@@ -2,7 +2,7 @@ package ${bussPackage}.service;
 
 import javax.annotation.Resource;
 import ${bussPackage}.vo.${className}VO;
-import ${bussPackage}.mapper.${upTableName}Mapper;
+import ${bussPackage}.mapper.${className}Mapper;
 import ${bussPackage}.pojo.DeleteCondition;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,7 +23,7 @@ import com.example.demo.pojo.UUIDUtils;
 public class ${className}Service {
 
     @Resource
-    ${upTableName}Mapper ${downTableName}Mapper;
+    ${className}Mapper ${lowerName}Mapper;
 
     /**
     * 获取列表分页数据数据
@@ -32,9 +32,9 @@ public class ${className}Service {
     */
     public ResponseMessage getPageData(${className}VO query) {
         ResponseMessage rm = ResponseMessage.getInstance();
-        int offset = query.getLimit() * (query.getPage() - 1);
+        int offset = query.getRows() * (query.getPage() - 1);
         query.setOffset(offset);
-        rm.setPageData(new PageData(${downTableName}Mapper.pageQuery(query), ${downTableName}Mapper.getRowNumber(query)));
+        rm.setPageData(new PageData(${lowerName}Mapper.pageQuery(query), ${lowerName}Mapper.getRowNumber(query)));
         return rm;
     }
     /**
@@ -44,7 +44,7 @@ public class ${className}Service {
     */
     public ResponseMessage getDetail(String id) {
         ResponseMessage rm = ResponseMessage.getInstance();
-        rm.setData(${downTableName}Mapper.selectByPrimaryKey(id));
+        rm.setData(${lowerName}Mapper.selectByPrimaryKey(id));
         return rm;
     }
 
@@ -62,9 +62,10 @@ public class ${className}Service {
         }
         if (query.getId() == null) {
             query.setId(UUIDUtils.getUUID());
-            ${downTableName}Mapper.insert(query);
+            query.setStatus("1");
+            ${lowerName}Mapper.insert(query);
         } else {
-            ${downTableName}Mapper.updateByPrimaryKey(query);
+            ${lowerName}Mapper.updateByPrimaryKey(query);
         }
         rm.setMessage("保存成功！");
         return rm;
@@ -80,7 +81,7 @@ public class ${className}Service {
         if (rm.hasError()) {
             return rm;
         }
-        ${downTableName}Mapper.deleteByPrimaryKey(dc.getId());
+        ${lowerName}Mapper.deleteByPrimaryKey(dc.getId());
         rm.setMessage("删除成功！");
         return rm;
     }
