@@ -1,5 +1,6 @@
 package ${bussPackage}.controller;
 
+import com.alibaba.excel.EasyExcel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.alibaba.fastjson.JSONObject;
 import ${bussPackage}.vo.${className}VO;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ${bussPackage}.controller.BaseController;
 import ${bussPackage}.pojo.DeleteCondition;
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -69,6 +71,34 @@ public class ${className}Controller extends BaseController {
             write(${lowerName}Service.saveData(query));
         } catch (Exception e) {
             logger.error("保存数据出错.param={}", ToStringBuilder.reflectionToString(query), e);
+            writeError();
+        }
+    }
+
+    @RequestMapping(value = "/uploadExcel", method = RequestMethod.POST)
+    @ApiOperation(value = "导入信息")
+    @ResponseBody
+    public void uploadExcel(MultipartFile excelFile) {
+        try {
+            write(${lowerName}Service.batchSaveData(excelFile));
+        } catch (Exception e) {
+            logger.error("导入出错", e);
+            writeError();
+        }
+    }
+
+    @GetMapping(value = "/downloadExcel")
+    @ApiOperation(value = "导出信息")
+    @ResponseBody
+    public void downloadExcel(HttpServletResponse response) {
+    try {
+        List<${className}PO> listData = ${lowerName}Service.getListData();
+            ServletOutputStream outputStream = ResponseUtil.returnJsonExcel(response, "测试下载");
+            // 这里需要设置不关闭流
+            EasyExcel.write(outputStream, ${className}PO.class).autoCloseStream(Boolean.FALSE).sheet("模板")
+            .doWrite(listData);
+            } catch (Exception e) {
+            logger.error("导出出错", e);
             writeError();
         }
     }
