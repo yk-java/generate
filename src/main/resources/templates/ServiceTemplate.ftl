@@ -97,7 +97,7 @@ public class ${className}Service {
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public ResponseMessage batchSaveData(MultipartFile excelFile) throws IOException {
         ResponseMessage rm = ResponseMessage.getInstance();
-        DataListener dataListener = new DataListener();
+        DataListener<${className}VO> dataListener = new DataListener<>();
         ExcelReader excelReader = EasyExcel.read(excelFile.getInputStream(), ${className}VO.class, dataListener).headRowNumber(1).build();
         ReadSheet readSheet = EasyExcel.readSheet(0).build();
 
@@ -123,52 +123,6 @@ public class ${className}Service {
     }
 
     /**
-    * 有个很重要的点 dataListener 不能被spring管理，要每次读取excel都要new,然后里面用到spring可以构造方法传进去
-    */
-    static class DataListener extends AnalysisEventListener<${className}VO> {
-        /**
-        * 每隔5条存储数据库，实际使用中可以3000条，然后清理list ，方便内存回收
-        */
-        private static final int BATCH_COUNT = 50;
-
-        List<${className}VO> list = new ArrayList<>();
-
-        /**
-        * 这个每一条数据解析都会来调用
-        *
-        * @param data    one row value. Is is same as {@link AnalysisContext#readRowHolder()}
-        * @param context 上下文
-        */
-        @Override
-        public void invoke(${className}VO data, AnalysisContext context) {
-
-        data.setId(UUIDUtils.getUUID());
-        data.setStatus("1");
-        list.add(data);
-        // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
-        /*if (list.size() >= BATCH_COUNT) {
-        saveData();
-        // 存储完成清理 list
-        list.clear();
-        }*/
-        }
-
-        /**
-        * 所有数据解析完成了 都会来调用
-        *
-        * @param context 上下文
-        */
-        @Override
-        public void doAfterAllAnalysed(AnalysisContext context) {
-        // 这里也要保存数据，确保最后遗留的数据也存储到数据库
-        }
-
-        public List<${className}VO> getList() {
-            return list;
-        }
-    }
-
-    /**
     * 删除方法
     * @param dc 参数
     * @return ResponseMessage
@@ -179,7 +133,7 @@ public class ${className}Service {
         if (rm.hasError()) {
             return rm;
         }
-        ${lowerName}Mapper.deleteByPrimaryKey(dc.getId());
+        ${lowerName}Mapper.deleteByIds(dc);
         rm.setMessage("删除成功！");
         return rm;
     }

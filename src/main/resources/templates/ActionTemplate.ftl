@@ -93,9 +93,9 @@ public class ${className}Controller extends BaseController {
     public void downloadExcel(HttpServletResponse response) {
     try {
         List<${className}PO> listData = ${lowerName}Service.getListData();
-            ServletOutputStream outputStream = ResponseUtil.returnJsonExcel(response, "测试下载");
+            ServletOutputStream outputStream = ResponseUtil.returnJsonExcel(response, "下载");
             // 这里需要设置不关闭流
-            EasyExcel.write(outputStream, ${className}PO.class).autoCloseStream(Boolean.FALSE).sheet("模板")
+            EasyExcel.write(outputStream, ${className}PO.class).autoCloseStream(Boolean.FALSE).sheet("数据")
             .doWrite(listData);
             } catch (Exception e) {
             logger.error("导出出错", e);
