@@ -4,6 +4,9 @@ package com.example.demo.pojo;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @author yang_
+ */
 public class HttpUtils {
 
 	public static HttpServletRequest getRequest() {

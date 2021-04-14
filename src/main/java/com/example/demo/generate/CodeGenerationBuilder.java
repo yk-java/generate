@@ -197,8 +197,8 @@ public class CodeGenerationBuilder extends AbstractCodeGenerateFactory {
 
         sbColumnValue.append(":createTime, ");
         sbColumnName.append("create_time, ");
-        String columnFields = columnData.stream().filter(f -> !"create_time".equals(f.getColumnName()))
-                .map(ColumnData::getColumnName)
+        String columnFields = columnData.stream().map(ColumnData::getColumnName)
+                .filter(columnName -> !"create_time".equals(columnName))
                 .collect(Collectors.joining(", "));
         sbColumnName.append(columnFields);
         String columnValues = columnData.stream().filter(f -> !"create_time".equals(f.getColumnName()))
@@ -225,8 +225,8 @@ public class CodeGenerationBuilder extends AbstractCodeGenerateFactory {
 
         sbColumnName.append("create_time, ");
         sbColumnValue.append(":createTime, ");
-        String columnFields = columnData.stream().filter(f -> !"create_time".equals(f.getColumnName()))
-                .map(ColumnData::getColumnName)
+        String columnFields = columnData.stream().map(ColumnData::getColumnName)
+                .filter(columnName -> !"create_time".equals(columnName))
                 .collect(Collectors.joining(", "));
         sbColumnName.append(columnFields);
         String columnValues = columnData.stream().filter(f -> !"create_time".equals(f.getColumnName()))

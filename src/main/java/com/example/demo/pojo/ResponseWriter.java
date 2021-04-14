@@ -5,6 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 
+/**
+ * @author yang_
+ */
 public class ResponseWriter {
 	/** plain */
 	private static final String CONTENT_TYPE_PLAIN = "text/plain;charset=UTF-8";
@@ -42,17 +45,11 @@ public class ResponseWriter {
 			response.setHeader("Cache-Control", "no-cache");
 			response.setDateHeader("Expires", 0);
 			response.setContentType(contentType);
-			PrintWriter pWriter = null;
-			try {
-				pWriter = response.getWriter();
+			try (PrintWriter pWriter = response.getWriter()) {
 				pWriter.write(text);
 				pWriter.flush();
 			} catch (Exception e) {
 				e.printStackTrace();
-			} finally {
-				if (pWriter != null) {
-					pWriter.close();
-				}
 			}
 		}
 	}

@@ -5,6 +5,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * @author yang_
+ */
 @ApiModel("删除条件")
 public class DeleteCondition {
 	@ApiModelProperty(value = "多ID用逗号分割", example = "1,2,3")

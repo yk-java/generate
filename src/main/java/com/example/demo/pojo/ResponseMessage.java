@@ -147,7 +147,7 @@ public class ResponseMessage
 
 	public boolean hasError()
 	{
-		return StringUtils.isNotEmpty(errorMsg) ? true : false;
+		return StringUtils.isNotEmpty(errorMsg);
 	}
 
 	public String getMessage()
@@ -163,7 +163,7 @@ public class ResponseMessage
 
 	public boolean isSuccess()
 	{
-		return StringUtils.isEmpty(errorMsg) ? true : false;
+		return StringUtils.isEmpty(errorMsg);
 	}
 
 	@SuppressWarnings("unchecked")
